@@ -9,6 +9,7 @@ import (
 func main() {
 	brokerList := []string{"localhost:9092"}
 	config := sarama.NewConfig()
+	config.Producer.Return.Successes = true
 
 	producer, err := sarama.NewSyncProducer(brokerList, config)
 	if err != nil {
