@@ -1,11 +1,13 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
+	"time"
 )
 
 func handler(w http.ResponseWriter, _ *http.Request) {
@@ -14,33 +16,21 @@ func handler(w http.ResponseWriter, _ *http.Request) {
 		fmt.Println(err)
 		return
 	}
-
 	fmt.Println(fprintf)
 }
 
 func main() {
-	fmt.Printf("Server is listening on port 8080\n")
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", handler)
 
 	server := &http.Server{
-		Addr:                         ":8080",
-		Handler:                      nil,
-		DisableGeneralOptionsHandler: false,
-		TLSConfig:                    nil,
-		ReadTimeout:                  0,
-		ReadHeaderTimeout:            0,
-		WriteTimeout:                 0,
-		IdleTimeout:                  0,
-		MaxHeaderBytes:               0,
-		TLSNextProto:                 nil,
-		ConnState:                    nil,
-		ErrorLog:                     nil,
-		BaseContext:                  nil,
-		ConnContext:                  nil,
+		Addr:    ":8080",
+		Handler: mux,
 	}
 
 	go func() {
 		fmt.Println("Server is listening on port 8080")
-		if err := server.ListenAndServe(); err != nil && !errors.Is(err, err) {
+		if err := server.ListenAndServe(); nil != err && !errors.Is(err, http.ErrServerClosed) {
 			fmt.Printf("Error starting server: %v\n", err)
 		}
 	}()
@@ -50,9 +40,12 @@ func main() {
 	<-quit
 	fmt.Println("Shutting down server...")
 
-	http.HandleFunc("/", handler)
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
-		return
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := server.Shutdown(ctx); err != nil {
+		fmt.Printf("Server forced to shutdown: %v\n", err)
 	}
+
+	fmt.Println("Server Closed")
 }
