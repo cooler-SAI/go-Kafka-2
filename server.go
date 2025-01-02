@@ -22,7 +22,20 @@ func main() {
 	fmt.Printf("Server is listening on port 8080\n")
 
 	server := &http.Server{
-		Addr: ":8080",
+		Addr:                         ":8080",
+		Handler:                      nil,
+		DisableGeneralOptionsHandler: false,
+		TLSConfig:                    nil,
+		ReadTimeout:                  0,
+		ReadHeaderTimeout:            0,
+		WriteTimeout:                 0,
+		IdleTimeout:                  0,
+		MaxHeaderBytes:               0,
+		TLSNextProto:                 nil,
+		ConnState:                    nil,
+		ErrorLog:                     nil,
+		BaseContext:                  nil,
+		ConnContext:                  nil,
 	}
 
 	go func() {
