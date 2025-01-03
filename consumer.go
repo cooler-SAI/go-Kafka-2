@@ -23,7 +23,8 @@ func main() {
 		}
 	}(consumer)
 
-	partitionConsumer, err := consumer.ConsumePartition("test", 0, sarama.OffsetOldest)
+	partitionConsumer, err := consumer.ConsumePartition("test-topic", 0, sarama.OffsetOldest)
+
 	if err != nil {
 		log.Fatalf("Error starting partition consumer: %s\n", err)
 	}

@@ -23,7 +23,7 @@ func main() {
 	}(producer)
 
 	msg := &sarama.ProducerMessage{
-		Topic: "test",
+		Topic: "test-topic",
 		Value: sarama.StringEncoder("hello kafka from Go"),
 	}
 	partition, offset, err := producer.SendMessage(msg)
