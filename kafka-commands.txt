@@ -1,0 +1,11 @@
+# Topic create
+docker exec -it kafka-server-local /opt/kafka/bin/kafka-topics.sh --create --topic test-topic
+--bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+
+# Producer
+docker exec -it kafka-server-local /opt/kafka/bin/kafka-console-producer.sh --topic test-topic
+--bootstrap-server localhost:9092
+
+# Consumer
+docker exec -it kafka-server-local /opt/kafka/bin/kafka-console-consumer.sh --topic test-topic
+--bootstrap-server localhost:9092 --from-beginning
