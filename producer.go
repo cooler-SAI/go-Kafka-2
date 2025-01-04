@@ -22,14 +22,25 @@ func main() {
 		}
 	}(producer)
 
-	msg := &sarama.ProducerMessage{
+	msg1 := &sarama.ProducerMessage{
 		Topic: "test-topic",
 		Value: sarama.StringEncoder("hello kafka from Go"),
 	}
-	partition, offset, err := producer.SendMessage(msg)
+	partition, offset, err := producer.SendMessage(msg1)
 	if err != nil {
 		log.Fatalf("Error sending message: %v", err)
 	}
 
 	fmt.Printf("Message sent to Partition: %d, Offset: %d\n", partition, offset)
+
+	msg2 := &sarama.ProducerMessage{
+		Topic: "test-topic",
+		Value: sarama.StringEncoder("Sending message to consumer..."),
+	}
+	partition2, offset, err := producer.SendMessage(msg2)
+	if err != nil {
+		log.Fatalf("Error sending message: %v", err)
+	}
+
+	fmt.Printf("Message sent to Partition: %d, Offset: %d\n", partition2, offset)
 }
